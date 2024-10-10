@@ -24,6 +24,7 @@ mongoose
   .catch((error) => console.log(error));
 
 const userSchema = new mongoose.Schema({
+  clientID: String,
   client: String,
   startDate: String,
   days: Number,
@@ -53,6 +54,18 @@ app.get("/", async (req, res) => {
 app.get("/client/:client", async (req, res) => {
   try {
     const user = await UserModel.findOne({ client: req.params.client }); // Find user by username
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json(user); // Send the user data as JSON
+  } catch (error) {
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.get("/client/:clientID", async (req, res) => {
+  try {
+    const user = await UserModel.findOne({ client: req.params.clientID }); // Find user by clientID
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
