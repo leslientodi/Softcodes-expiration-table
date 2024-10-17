@@ -10,8 +10,8 @@ app.use(cors());
 
 dotenv.config();
 
-const PORT = process.env.PORT || 7002;
-const MONGOURL = process.env.MONGO_URL;
+const PORT = process.env.PORT2 || 7002;
+const MONGOURL = process.env.MONGO_URL2;
 
 mongoose
   .connect(MONGOURL)
@@ -32,7 +32,28 @@ const userSchema = new mongoose.Schema({
   contact_person: String,
 });
 
-const UserModel = mongoose.model("customer", userSchema);
+const UserModel = mongoose.model("client", userSchema);
+
+const user2Schema = new mongoose.Schema({
+  productID: String,
+  product: String,
+  category: String,
+});
+
+const ProductModel = mongoose.model("Product", user2Schema);
+
+const transSchema = new mongoose.Schema({
+  clientID: String,
+  productID: String,
+  client: String,
+  product: String,
+  startDate: String,
+  days: Number,
+  expiry: String,
+  status: Number,
+});
+
+const transModel = mongoose.model("Transaction", transSchema);
 
 app.post("/", async (req, res) => {
   try {
@@ -118,7 +139,7 @@ app.get("/client/:client", async (req, res) => {
   }
 });
 
-app.get("/newClient/:client", async (req, res) => {
+app.get("/newSupport/:client", async (req, res) => {
   try {
     const user = await UserModel.findOne({ client: req.params.client }); // Find user by username
     if (!user) {
@@ -185,24 +206,3 @@ app.put("/clientID/:clientID", async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
-
-const user2Schema = new mongoose.Schema({
-  productID: String,
-  product: String,
-  category: String,
-});
-
-const ProductModel = mongoose.model("Product", user2Schema);
-
-const transSchema = new mongoose.Schema({
-  clientID: String,
-  productID: String,
-  client: String,
-  product: String,
-  startDate: String,
-  days: Number,
-  expiry: String,
-  status: Number,
-});
-
-const transModel = mongoose.model("Transaction", transSchema);
