@@ -186,6 +186,17 @@ app.put("/clientID/:clientID", async (req, res) => {
   }
 });
 
+app.get("/clients/:id", async (req, res) => {
+  const { id } = req.params;
+  const client = await UserModel.findOne({ clientID: id });
+
+  if (client) {
+    res.status(200).json({ exists: true });
+  } else {
+    res.status(404).json({ exists: false });
+  }
+});
+
 const user2Schema = new mongoose.Schema({
   productID: String,
   product: String,

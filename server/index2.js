@@ -206,3 +206,14 @@ app.put("/clientID/:clientID", async (req, res) => {
     res.status(500).json({ message: "Server error", error });
   }
 });
+
+app.get("/clients/:id", async (req, res) => {
+  const { id } = req.params;
+  const client = await UserModel.findOne({ clientID: id });
+
+  if (client) {
+    res.status(200).json({ exists: true });
+  } else {
+    res.status(404).json({ exists: false });
+  }
+});
